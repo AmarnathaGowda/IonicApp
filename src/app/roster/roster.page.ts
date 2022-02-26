@@ -86,8 +86,13 @@ async deleteStudent(student: Student) {
   const alert = await this.toastController.create(
     {
       message: `${student.firstName} ${student.lastName} has been deleted.`,
-      position: 'top',
-      duration: 3000
+      position: 'bottom',
+      duration: 5000,
+      color: "success",
+      buttons: [ {
+        icon: 'close',
+        role: 'close'
+      }]
     });
 
   await alert.present();
