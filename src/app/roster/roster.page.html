@@ -11,12 +11,14 @@
   <ion-list>
     <ion-item-sliding *ngFor="let student of students">
       <ion-item>
-        <ion-icon slot="start" name="person-outline">
+        <ion-icon style="color:#ADD8E6" *ngIf="student.gender==='Male'" slot="start" name="man-outline">
+        </ion-icon>
+        <ion-icon style="color:pink" *ngIf="student.gender==='Female'" slot="start" name="woman-outline">
         </ion-icon>
         <ion-label>{{student.lastName}}, {{student.firstName}}
         </ion-label>
-        <ion-icon *ngIf="student.status==='present'" slot="end" name="eye"></ion-icon>
-        <ion-icon *ngIf="student.status==='absent'" slot="end" name="eye-off-outline"></ion-icon>
+        <ion-icon *ngIf="student.status==='present'" slot="end"  style="color:green" name="checkmark-circle-outline"></ion-icon>
+        <ion-icon *ngIf="student.status==='absent'" slot="end" style="color:red" name="close-circle-outline"></ion-icon>
 
 
         <ion-buttons slot="end">

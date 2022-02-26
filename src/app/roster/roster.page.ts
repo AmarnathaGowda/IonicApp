@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Student, StudentsService } from '../students.service';
 
+
 @Component({
   selector: 'app-roster',
   templateUrl: './roster.page.html',
@@ -29,13 +30,13 @@ async presentActionSheet(student: Student) {
     header: `${student.firstName} ${student.lastName}`,
     buttons: [{
       text: 'Mark Present',
-      icon: 'eye',
+      icon: 'checkmark-circle-outline',
       handler: () => {
         student.status = 'present';
       }
     }, {
       text: 'Mark Absent',
-      icon: 'eye-off-outline',
+      icon: 'close-circle-outline',
       handler: () => {
         student.status = 'absent';
       }
@@ -86,13 +87,15 @@ async deleteStudent(student: Student) {
   const alert = await this.toastController.create(
     {
       message: `${student.firstName} ${student.lastName} has been deleted.`,
-      position: 'bottom',
+      position: 'middle',
       duration: 5000,
-      color: "success",
-      buttons: [ {
-        icon: 'close',
-        role: 'close'
-      }]
+      color: 'success',
+      buttons: [
+          {
+            text: 'Dismiss',
+            role: 'cancel',
+          }
+      ]
     });
 
   await alert.present();
