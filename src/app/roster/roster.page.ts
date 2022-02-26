@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Student, StudentsService } from '../students.service';
 
-
 @Component({
   selector: 'app-roster',
   templateUrl: './roster.page.html',
@@ -10,6 +9,7 @@ import { Student, StudentsService } from '../students.service';
 })
 export class RosterPage implements OnInit {
   students: Student[] = [];
+  deletedStudents: Student[] = [];
 
 constructor(
   private actionSheetController: ActionSheetController,
@@ -82,8 +82,16 @@ async presentDeleteAlert(student: Student) {
   await alert.present();
 }
 
+async undoDelete(){
+  if (this.deletedStudents.length > 0) {
+    let lastDeleted = this.deletedStudents.pop();
+    this.students.push(lastDeleted);
+  }
+}
+
 async deleteStudent(student: Student) {
   this.students = this.students.filter(x => x.id !== student.id);
+  this.deletedStudents.push(student);
   const alert = await this.toastController.create(
     {
       message: `${student.firstName} ${student.lastName} has been deleted.`,
@@ -92,8 +100,9 @@ async deleteStudent(student: Student) {
       color: 'success',
       buttons: [
           {
-            text: 'Dismiss',
-            role: 'cancel',
+            text: 'Undo',
+            icon: 'arrow-undo-circle-sharp',
+            handler: () => {  this.undoDelete() }
           }
       ]
     });
