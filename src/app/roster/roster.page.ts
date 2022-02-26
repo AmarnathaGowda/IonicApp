@@ -110,4 +110,16 @@ async deleteStudent(student: Student) {
   await alert.present();
 }
 
+async sortRoster(){
+  const sortedStudents: Student[] = this.students.sort(function(a, b) {
+      var keyA = a.lastName, keyB = b.lastName;
+      if (keyA < keyB) return -1;
+      if (keyA > keyB) return 1;
+      return 0;
+     }
+  )
+  
+  this.students = sortedStudents; 
+}
+
 }
