@@ -1,14 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-      <ion-button (click)="sortRoster()">
-        <ion-icon slot="icon-only" name="swap-vertical-sharp"></ion-icon>
-        </ion-button>
-    </ion-buttons>
-    <ion-title>Class Roster</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header title="Class Roster">
+  <ion-button slot='controlButton' (click)="sortRoster()">
+    <ion-icon name="swap-vertical-outline"></ion-icon>
+  </ion-button>
+</app-header>
 
 <ion-content>
   <ion-list>
