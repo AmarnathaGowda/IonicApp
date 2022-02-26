@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Student, StudentsService } from '../students.service';
 
 @Component({
@@ -12,16 +12,17 @@ export class RosterPage implements OnInit {
 
 constructor(
   private actionSheetController: ActionSheetController,
+  private alertController: AlertController,
   private studentService: StudentsService,
-  private alertController: AlertController) { }
+  private toastController: ToastController) { }
 
 ngOnInit() {
   this.students = this.studentService.getAll();
 }
   
-studentUrl(student: Student) {
-  return `/student/${student.id}`;
-}
+  studentUrl(student: Student) {
+    return `/student/${student.id}`;
+  }
 
 async presentActionSheet(student: Student) {
   const actionSheet = await this.actionSheetController.create({
@@ -43,7 +44,7 @@ async presentActionSheet(student: Student) {
       icon: 'trash',
       role: 'destructive',
       handler: () => {
-        this.deleteStudent(student);
+        this.presentDeleteAlert(student);
       }
     }, {
       text: 'Cancel',
@@ -58,16 +59,11 @@ async presentActionSheet(student: Student) {
   await actionSheet.present();
 }
 
-async deleteStudent(student: Student) {
-  this.students = this.students.filter(x => x.id !== student.id);
-}
-
 async presentDeleteAlert(student: Student) {
   const alert = await this.alertController.create(
     {
       header: 'Delete this student?',
-      subHeader: 
-        `${student.firstName} ${student.lastName}`,
+      subHeader: `${student.firstName} ${student.lastName}`,
       message: 'This operation cannot be undone.',
       buttons: [
         {
@@ -81,7 +77,19 @@ async presentDeleteAlert(student: Student) {
       ]
     }
   );
- 
+
+  await alert.present();
+}
+
+async deleteStudent(student: Student) {
+  this.students = this.students.filter(x => x.id !== student.id);
+  const alert = await this.toastController.create(
+    {
+      message: `${student.firstName} ${student.lastName} has been deleted.`,
+      position: 'top',
+      duration: 3000
+    });
+
   await alert.present();
 }
 
