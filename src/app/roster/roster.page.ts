@@ -1,7 +1,6 @@
-import { Student, StudentsService } from './../students.service';
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
-
+import { Student, StudentsService } from '../students.service';
 
 @Component({
   selector: 'app-roster',
@@ -9,30 +8,57 @@ import { ActionSheetController } from '@ionic/angular';
   styleUrls: ['./roster.page.scss'],
 })
 export class RosterPage implements OnInit {
-
   students: Student[] = [];
 
-  constructor( private studentService: StudentsService, private actionSheetController: ActionSheetController) { }
+constructor(
+  private actionSheetController: ActionSheetController,
+  private studentService: StudentsService) { }
 
-  ngOnInit() {
-    this.students = this.studentService.getAll();
-  }
+ngOnInit() {
+  this.students = this.studentService.getAll();
+}
+  
+studentUrl(student: Student) {
+  return `/student/${student.id}`;
+}
 
-  studentUrl(student: Student) {
-    return `/student/${student.id}`;
-  }
+async presentActionSheet(student: Student) {
+  const actionSheet = await this.actionSheetController.create({
+    header: `${student.firstName} ${student.lastName}`,
+    buttons: [{
+      text: 'Mark Present',
+      icon: 'eye',
+      handler: () => {
+        student.status = 'present';
+      }
+    }, {
+      text: 'Mark Absent',
+      icon: 'eye-off-outline',
+      handler: () => {
+        student.status = 'absent';
+      }
+    }, {
+      text: 'Delete',
+      icon: 'trash',
+      role: 'destructive',
+      handler: () => {
+        this.deleteStudent(student);
+      }
+    }, {
+      text: 'Cancel',
+      icon: 'close',
+      role: 'cancel',
+      handler: () => {
+        console.log('Cancel clicked');
+      }
+    }]
+  });
 
-  async deleteStudent(student: Student) {
-    this.students = this.students.filter(x => x.id !== student.id);
-  }
+  await actionSheet.present();
+}
 
-  async presentActionSheet(student: Student) {
-    const actionSheet = await this.actionSheetController.create({ 
-      header: '${student.firstName} ${student.lastname}',
-      buttons:[]
-    })
-
-    await actionSheet.present();
-  }
+async deleteStudent(student: Student) {
+  this.students = this.students.filter(x => x.id !== student.id);
+}
 
 }
